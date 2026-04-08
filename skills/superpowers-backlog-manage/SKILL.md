@@ -7,6 +7,16 @@ description: Use when the user wants to capture a new idea, feature, or bug OR u
 
 Covers two operations: **adding** new epics and **editing** existing ones. Both write to `EPICS.json` via the `superpowers-backlog` script.
 
+## Locating the script
+
+`epics.mjs` lives in the `superpowers-backlog` skill directory (sibling skill to this one). Determine the absolute path from this SKILL.md's location:
+
+```
+EPICS_SCRIPT="<parent directory of this SKILL.md>/../superpowers-backlog/epics.mjs"
+```
+
+All commands below use `$EPICS_SCRIPT` as a placeholder — substitute the resolved absolute path.
+
 ## Adding a new epic
 
 Evaluate the item and append a rated entry to `EPICS.json`. Process **one item at a time**.
@@ -39,7 +49,7 @@ Evaluate the item and append a rated entry to `EPICS.json`. Process **one item a
 6. **Add via the script:**
 
 ```bash
-node ~/.claude/skills/superpowers-backlog/epics.mjs --add \
+node $EPICS_SCRIPT --add \
   --id <kebab-case-id> \
   --epic "Clear, concise description of what needs doing" \
   --context "Optional background or constraints" \
@@ -58,7 +68,7 @@ All flags except `--id` and `--epic` are optional. `--ref` can be repeated. The 
 User: "We should show a loading spinner while transactions are fetching — and make sure it doesn't flicker on fast connections"
 
 ```bash
-node ~/.claude/skills/superpowers-backlog/epics.mjs --add \
+node $EPICS_SCRIPT --add \
   --id transaction-list-loading-spinner \
   --epic "Show loading spinner while transactions are fetching" \
   --context "Should not flicker on fast connections — add a minimum display duration of ~150ms. The list currently shows nothing while loading." \
@@ -75,24 +85,24 @@ node ~/.claude/skills/superpowers-backlog/epics.mjs --add \
 
 ```bash
 # Update the description
-node ~/.claude/skills/superpowers-backlog/epics.mjs --edit <id-or-search> --field epic --value "New description"
+node $EPICS_SCRIPT --edit <id-or-search> --field epic --value "New description"
 
 # Update or add context
-node ~/.claude/skills/superpowers-backlog/epics.mjs --edit <id-or-search> --field context --value "Minimum display duration of 150ms to avoid flicker"
+node $EPICS_SCRIPT --edit <id-or-search> --field context --value "Minimum display duration of 150ms to avoid flicker"
 
 # Update a scoring field
-node ~/.claude/skills/superpowers-backlog/epics.mjs --edit <id-or-search> --field user_impact --value 0.9
+node $EPICS_SCRIPT --edit <id-or-search> --field user_impact --value 0.9
 ```
 
 ### References array
 
 ```bash
 # Add a reference
-node ~/.claude/skills/superpowers-backlog/epics.mjs --edit <id-or-search> --add-ref "src/hooks/useTransactions.ts:1-50"
-node ~/.claude/skills/superpowers-backlog/epics.mjs --edit <id-or-search> --add-ref "https://example.com/spec"
+node $EPICS_SCRIPT --edit <id-or-search> --add-ref "src/hooks/useTransactions.ts:1-50"
+node $EPICS_SCRIPT --edit <id-or-search> --add-ref "https://example.com/spec"
 
 # Remove a reference (exact string match)
-node ~/.claude/skills/superpowers-backlog/epics.mjs --edit <id-or-search> --remove-ref "src/old/path.ts:1-20"
+node $EPICS_SCRIPT --edit <id-or-search> --remove-ref "src/old/path.ts:1-20"
 ```
 
 `<id-or-search>` matches exact `id` first, then falls back to case-insensitive substring of the epic description. Numeric fields (`complexity`, `user_impact`, `code_quality_impact`, `extensibility_impact`) are automatically coerced from string to number.

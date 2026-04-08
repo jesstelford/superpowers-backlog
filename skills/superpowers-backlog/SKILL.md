@@ -5,32 +5,42 @@ description: Use when the user wants to see the backlog, asks what to work on ne
 
 # superpowers-backlog Commands
 
-The script lives at `~/.claude/skills/superpowers-backlog/epics.mjs` and runs in any project directory — no installation needed. It reads and writes `EPICS.json` in the current working directory (`process.cwd()`).
+The script `epics.mjs` lives **in the same directory as this SKILL.md file**. It runs in any project directory — no installation needed. It reads and writes `EPICS.json` in the current working directory (`process.cwd()`).
+
+## Locating the script
+
+`epics.mjs` is always a sibling of this skill file. Determine the absolute path from this SKILL.md's location:
+
+```
+EPICS_SCRIPT="<directory containing this SKILL.md>/epics.mjs"
+```
+
+All commands below use `$EPICS_SCRIPT` as a placeholder — substitute the resolved absolute path.
 
 ## Commands
 
 ```bash
 # List top incomplete epics with context and inlined references
-node ~/.claude/skills/superpowers-backlog/epics.mjs --pending --limit 5 --with-context
+node $EPICS_SCRIPT --pending --limit 5 --with-context
 
 # All incomplete epics (no context)
-node ~/.claude/skills/superpowers-backlog/epics.mjs --pending
+node $EPICS_SCRIPT --pending
 
 # Search by keyword (read-only — searches id, description, and context)
-node ~/.claude/skills/superpowers-backlog/epics.mjs --search <term>
-node ~/.claude/skills/superpowers-backlog/epics.mjs --search <term> --with-context
+node $EPICS_SCRIPT --search <term>
+node $EPICS_SCRIPT --search <term> --with-context
 
 # Mark an epic in-progress
-node ~/.claude/skills/superpowers-backlog/epics.mjs --start <id-or-search>
+node $EPICS_SCRIPT --start <id-or-search>
 
 # Mark an epic completed
-node ~/.claude/skills/superpowers-backlog/epics.mjs --complete <id-or-search>
+node $EPICS_SCRIPT --complete <id-or-search>
 
 # Show completed epics
-node ~/.claude/skills/superpowers-backlog/epics.mjs --filter-completed
+node $EPICS_SCRIPT --filter-completed
 
 # Add a new epic
-node ~/.claude/skills/superpowers-backlog/epics.mjs --add --id <id> --epic "Description" \
+node $EPICS_SCRIPT --add --id <id> --epic "Description" \
   [--context "..."] [--complexity 0.3] [--user-impact 0.7] \
   [--code-quality-impact 0.4] [--extensibility-impact 0.6] [--ref "path:1-10"] ...
 ```
