@@ -26,10 +26,10 @@ Epics also support a `context` field (free-form background text) and a `referenc
 
 ```bash
 # Global (available in all projects)
-npx skills add jess/superpowers-backlog -g
+npx skills add jesstelford/superpowers-backlog -g
 
 # Project-scoped
-npx skills add jess/superpowers-backlog
+npx skills add jesstelford/superpowers-backlog
 ```
 
 ## Getting started
