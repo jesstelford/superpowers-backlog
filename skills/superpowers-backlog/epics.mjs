@@ -45,7 +45,7 @@
  *                                                        Update a field on an epic
  *   node epics.mjs --edit <id-or-search> --add-ref <ref>     Append a reference
  *   node epics.mjs --edit <id-or-search> --remove-ref <ref>  Remove a reference
- *   node epics.mjs --add --epic <desc> [--id <id>] [--context <text>]
+ *   node epics.mjs --add --description <desc> [--id <id>] [--context <text>]
  *                   [--complexity <0-1>] [--user-impact <0-1>]
  *                   [--code-quality-impact <0-1>] [--extensibility-impact <0-1>]
  *                   [--ref <ref> ...]                        Add a new epic
@@ -179,7 +179,7 @@ function toKebabId(text) {
 function addEpic(filePath, epicData) {
   const epics = loadEpics(filePath);
 
-  if (!epicData.epic) throw new Error('--add requires --epic');
+  if (!epicData.epic) throw new Error('--add requires --description');
 
   const id = epicData.id || toKebabId(epicData.epic);
   if (!id) throw new Error('Could not derive an id — provide --id explicitly');
@@ -284,7 +284,7 @@ function parseArgs(argv) {
     removeRef: null,
     add: false,
     id: null,
-    epic: null,
+    description: null,
     context: null,
     complexity: null,
     userImpact: null,
@@ -334,9 +334,9 @@ function parseArgs(argv) {
     } else if (argv[i] === '--id') {
       if (!argv[i + 1]) throw new Error('--id requires a value');
       args.id = argv[++i];
-    } else if (argv[i] === '--epic') {
-      if (!argv[i + 1]) throw new Error('--epic requires a value');
-      args.epic = argv[++i];
+    } else if (argv[i] === '--description') {
+      if (!argv[i + 1]) throw new Error('--description requires a value');
+      args.description = argv[++i];
     } else if (argv[i] === '--context') {
       if (!argv[i + 1]) throw new Error('--context requires a value');
       args.context = argv[++i];
@@ -430,7 +430,7 @@ function main() {
   if (args.add) {
     const epic = addEpic(filePath, {
       id: args.id,
-      epic: args.epic,
+      epic: args.description,
       context: args.context,
       references: args.refs,
       complexity: args.complexity,

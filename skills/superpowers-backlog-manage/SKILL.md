@@ -52,7 +52,7 @@ Evaluate the item and add it via the script. Process **one item at a time**.
 
 ```bash
 node $EPICS_SCRIPT --add \
-  --epic "Clear, concise description of what needs doing" \
+  --description "Clear, concise description of what needs doing" \
   --context "Optional background or constraints" \
   --complexity 0.3 \
   --user-impact 0.7 \
@@ -62,7 +62,7 @@ node $EPICS_SCRIPT --add \
   --ref "https://example.com/design-doc"
 ```
 
-Only `--epic` is required. `--id` is auto-generated from the description if omitted. `--ref` can be repeated.
+Only `--description` is required. `--id` is auto-generated from the description if omitted. `--ref` can be repeated.
 
 ### Example
 
@@ -70,7 +70,7 @@ User: "We should show a loading spinner while transactions are fetching — and 
 
 ```bash
 node $EPICS_SCRIPT --add \
-  --epic "Show loading spinner while transactions are fetching" \
+  --description "Show loading spinner while transactions are fetching" \
   --context "Should not flicker on fast connections — add a minimum display duration of ~150ms. The list currently shows nothing while loading." \
   --complexity 0.2 \
   --user-impact 0.6 \

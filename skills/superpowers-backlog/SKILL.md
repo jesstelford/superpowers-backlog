@@ -42,7 +42,7 @@ node $EPICS_SCRIPT --complete <id-or-search>
 node $EPICS_SCRIPT --filter-completed
 
 # Add a new epic
-node $EPICS_SCRIPT --add --epic "Description" [--id <id>] \
+node $EPICS_SCRIPT --add --description "Description" [--id <id>] \
   [--context "..."] [--complexity 0.3] [--user-impact 0.7] \
   [--code-quality-impact 0.4] [--extensibility-impact 0.6] [--ref "path:1-10"] ...
 ```
