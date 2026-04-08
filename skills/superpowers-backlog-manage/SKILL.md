@@ -36,45 +36,37 @@ Evaluate the item and append a rated entry to `EPICS.json`. Process **one item a
 
 5. **Generate an `id`** — short kebab-case slug. Used in `--start` / `--complete` / `--edit` / `--search` commands.
 
-6. **Append to `EPICS.json`** with `"status": null`.
+6. **Add via the script:**
 
-### Output format
-
-```json
-{
-  "id": "kebab-case-slug",
-  "epic": "Clear, concise description of what needs doing",
-  "status": null,
-  "context": "Optional background or constraints the implementer needs to know",
-  "references": [
-    "src/relevant/file.ts:10-40",
-    "https://example.com/design-doc"
-  ],
-  "complexity": 0.3,
-  "user_impact": 0.7,
-  "code_quality_impact": 0.4,
-  "extensibility_impact": 0.6
-}
+```bash
+node ~/.claude/skills/superpowers-backlog/epics.mjs --add \
+  --id <kebab-case-id> \
+  --epic "Clear, concise description of what needs doing" \
+  --context "Optional background or constraints" \
+  --complexity 0.3 \
+  --user-impact 0.7 \
+  --code-quality-impact 0.4 \
+  --extensibility-impact 0.6 \
+  --ref "src/relevant/file.ts:10-40" \
+  --ref "https://example.com/design-doc"
 ```
+
+All flags except `--id` and `--epic` are optional. `--ref` can be repeated. The epic is created with `status: null`.
 
 ### Example
 
 User: "We should show a loading spinner while transactions are fetching — and make sure it doesn't flicker on fast connections"
 
-```json
-{
-  "id": "transaction-list-loading-spinner",
-  "epic": "Show loading spinner while transactions are fetching",
-  "status": null,
-  "context": "Should not flicker on fast connections — add a minimum display duration of ~150ms. The list currently shows nothing while loading.",
-  "references": [
-    "src/components/transactions/TransactionList.tsx:1-30"
-  ],
-  "complexity": 0.2,
-  "user_impact": 0.6,
-  "code_quality_impact": 0.3,
-  "extensibility_impact": 0.2
-}
+```bash
+node ~/.claude/skills/superpowers-backlog/epics.mjs --add \
+  --id transaction-list-loading-spinner \
+  --epic "Show loading spinner while transactions are fetching" \
+  --context "Should not flicker on fast connections — add a minimum display duration of ~150ms. The list currently shows nothing while loading." \
+  --complexity 0.2 \
+  --user-impact 0.6 \
+  --code-quality-impact 0.3 \
+  --extensibility-impact 0.2 \
+  --ref "src/components/transactions/TransactionList.tsx:1-30"
 ```
 
 ## Editing an existing epic

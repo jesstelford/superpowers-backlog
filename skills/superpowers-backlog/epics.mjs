@@ -45,6 +45,10 @@
  *                                                        Update a field on an epic
  *   node epics.mjs --edit <id-or-search> --add-ref <ref>     Append a reference
  *   node epics.mjs --edit <id-or-search> --remove-ref <ref>  Remove a reference
+ *   node epics.mjs --add --id <id> --epic <desc> [--context <text>]
+ *                   [--complexity <0-1>] [--user-impact <0-1>]
+ *                   [--code-quality-impact <0-1>] [--extensibility-impact <0-1>]
+ *                   [--ref <ref> ...]                        Add a new epic
  */
 
 import { readFileSync, writeFileSync } from 'fs';
@@ -161,6 +165,35 @@ function mutateEpicRef(filePath, search, ref, action) {
   return epic;
 }
 
+/** Add a brand-new epic to EPICS.json. */
+function addEpic(filePath, epicData) {
+  const epics = loadEpics(filePath);
+
+  if (!epicData.id) throw new Error('--add requires --id');
+  if (!epicData.epic) throw new Error('--add requires --epic');
+  if (epics.some(e => e.id === epicData.id)) {
+    throw new Error(`An epic with id "${epicData.id}" already exists`);
+  }
+
+  const entry = {
+    id: epicData.id,
+    epic: epicData.epic,
+    status: null,
+  };
+
+  if (epicData.context != null) entry.context = epicData.context;
+  if (epicData.references.length > 0) entry.references = epicData.references;
+
+  entry.complexity = epicData.complexity ?? 0;
+  entry.user_impact = epicData.user_impact ?? 0;
+  entry.code_quality_impact = epicData.code_quality_impact ?? 0;
+  entry.extensibility_impact = epicData.extensibility_impact ?? 0;
+
+  epics.push(entry);
+  writeFileSync(filePath, JSON.stringify(epics, null, 2) + '\n');
+  return entry;
+}
+
 /**
  * Parse a reference string into its components.
  * Formats: "path:start-end", "path:line", "path", "https://..."
@@ -237,6 +270,15 @@ function parseArgs(argv) {
     value: null,
     addRef: null,
     removeRef: null,
+    add: false,
+    id: null,
+    epic: null,
+    context: null,
+    complexity: null,
+    userImpact: null,
+    codeQualityImpact: null,
+    extensibilityImpact: null,
+    refs: [],
   };
 
   for (let i = 0; i < argv.length; i++) {
@@ -275,6 +317,32 @@ function parseArgs(argv) {
     } else if (argv[i] === '--remove-ref') {
       if (!argv[i + 1]) throw new Error('--remove-ref requires a reference string');
       args.removeRef = argv[++i];
+    } else if (argv[i] === '--add') {
+      args.add = true;
+    } else if (argv[i] === '--id') {
+      if (!argv[i + 1]) throw new Error('--id requires a value');
+      args.id = argv[++i];
+    } else if (argv[i] === '--epic') {
+      if (!argv[i + 1]) throw new Error('--epic requires a value');
+      args.epic = argv[++i];
+    } else if (argv[i] === '--context') {
+      if (!argv[i + 1]) throw new Error('--context requires a value');
+      args.context = argv[++i];
+    } else if (argv[i] === '--complexity') {
+      if (!argv[i + 1]) throw new Error('--complexity requires a value');
+      args.complexity = parseFloat(argv[++i]);
+    } else if (argv[i] === '--user-impact') {
+      if (!argv[i + 1]) throw new Error('--user-impact requires a value');
+      args.userImpact = parseFloat(argv[++i]);
+    } else if (argv[i] === '--code-quality-impact') {
+      if (!argv[i + 1]) throw new Error('--code-quality-impact requires a value');
+      args.codeQualityImpact = parseFloat(argv[++i]);
+    } else if (argv[i] === '--extensibility-impact') {
+      if (!argv[i + 1]) throw new Error('--extensibility-impact requires a value');
+      args.extensibilityImpact = parseFloat(argv[++i]);
+    } else if (argv[i] === '--ref') {
+      if (!argv[i + 1]) throw new Error('--ref requires a value');
+      args.refs.push(argv[++i]);
     } else if (argv[i].startsWith('--')) {
       throw new Error(`Unknown option: ${argv[i]}`);
     }
@@ -347,6 +415,21 @@ function main() {
   const filePath = resolve(process.cwd(), 'EPICS.json');
 
   // Mutation commands — update EPICS.json and exit without rendering the report.
+  if (args.add) {
+    const epic = addEpic(filePath, {
+      id: args.id,
+      epic: args.epic,
+      context: args.context,
+      references: args.refs,
+      complexity: args.complexity,
+      user_impact: args.userImpact,
+      code_quality_impact: args.codeQualityImpact,
+      extensibility_impact: args.extensibilityImpact,
+    });
+    process.stdout.write(`✓ Added epic [${epic.id}]: ${epic.epic}  (score: ${score(epic).toFixed(3)})\n`);
+    return;
+  }
+
   if (args.complete !== null) {
     const epic = setEpicStatus(filePath, args.complete, 'completed');
     process.stdout.write(`✓ Marked completed: ${epic.epic}\n`);
@@ -443,7 +526,7 @@ if (isMain) {
   main();
 }
 
-export { score, loadEpics, parseArgs, bar, findEpic, searchEpics, setEpicStatus, setEpicField, mutateEpicRef, parseReference, readFileReference, extractContext };
+export { score, loadEpics, parseArgs, bar, findEpic, searchEpics, setEpicStatus, setEpicField, mutateEpicRef, addEpic, parseReference, readFileReference, extractContext };
 
 // Legacy export alias — extractContext kept for backwards compat
 function extractContext(location, lineNum) {

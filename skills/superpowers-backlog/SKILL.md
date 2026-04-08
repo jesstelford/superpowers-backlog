@@ -28,6 +28,11 @@ node ~/.claude/skills/superpowers-backlog/epics.mjs --complete <id-or-search>
 
 # Show completed epics
 node ~/.claude/skills/superpowers-backlog/epics.mjs --filter-completed
+
+# Add a new epic
+node ~/.claude/skills/superpowers-backlog/epics.mjs --add --id <id> --epic "Description" \
+  [--context "..."] [--complexity 0.3] [--user-impact 0.7] \
+  [--code-quality-impact 0.4] [--extensibility-impact 0.6] [--ref "path:1-10"] ...
 ```
 
 `<id-or-search>` matches exact `id` first, then falls back to case-insensitive substring of the epic description.
