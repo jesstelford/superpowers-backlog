@@ -46,13 +46,12 @@ Evaluate the item and add it via the script. Process **one item at a time**.
 
    **Do not factor in effort, time, or development speed.** `complexity` is technical difficulty only.
 
-5. **Generate an `id`** — short kebab-case slug. Used in `--start` / `--complete` / `--edit` / `--search` commands.
+5. **Optionally provide an `id`** — short kebab-case slug. If omitted, one is auto-generated from the epic description. Used in `--start` / `--complete` / `--edit` / `--search` commands.
 
 6. **Add via the script:**
 
 ```bash
 node $EPICS_SCRIPT --add \
-  --id <kebab-case-id> \
   --epic "Clear, concise description of what needs doing" \
   --context "Optional background or constraints" \
   --complexity 0.3 \
@@ -63,7 +62,7 @@ node $EPICS_SCRIPT --add \
   --ref "https://example.com/design-doc"
 ```
 
-All flags except `--id` and `--epic` are optional. `--ref` can be repeated. The epic is created with `status: null`.
+Only `--epic` is required. `--id` is auto-generated from the description if omitted. `--ref` can be repeated.
 
 ### Example
 
@@ -71,7 +70,6 @@ User: "We should show a loading spinner while transactions are fetching — and 
 
 ```bash
 node $EPICS_SCRIPT --add \
-  --id transaction-list-loading-spinner \
   --epic "Show loading spinner while transactions are fetching" \
   --context "Should not flicker on fast connections — add a minimum display duration of ~150ms. The list currently shows nothing while loading." \
   --complexity 0.2 \

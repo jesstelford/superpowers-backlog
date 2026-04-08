@@ -45,7 +45,7 @@
  *                                                        Update a field on an epic
  *   node epics.mjs --edit <id-or-search> --add-ref <ref>     Append a reference
  *   node epics.mjs --edit <id-or-search> --remove-ref <ref>  Remove a reference
- *   node epics.mjs --add --id <id> --epic <desc> [--context <text>]
+ *   node epics.mjs --add --epic <desc> [--id <id>] [--context <text>]
  *                   [--complexity <0-1>] [--user-impact <0-1>]
  *                   [--code-quality-impact <0-1>] [--extensibility-impact <0-1>]
  *                   [--ref <ref> ...]                        Add a new epic
@@ -165,18 +165,30 @@ function mutateEpicRef(filePath, search, ref, action) {
   return epic;
 }
 
+/** Derive a kebab-case id from an epic description. */
+function toKebabId(text) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 60)
+    .replace(/-+$/, '');
+}
+
 /** Add a brand-new epic to EPICS.json. */
 function addEpic(filePath, epicData) {
   const epics = loadEpics(filePath);
 
-  if (!epicData.id) throw new Error('--add requires --id');
   if (!epicData.epic) throw new Error('--add requires --epic');
-  if (epics.some(e => e.id === epicData.id)) {
-    throw new Error(`An epic with id "${epicData.id}" already exists`);
+
+  const id = epicData.id || toKebabId(epicData.epic);
+  if (!id) throw new Error('Could not derive an id — provide --id explicitly');
+  if (epics.some(e => e.id === id)) {
+    throw new Error(`An epic with id "${id}" already exists`);
   }
 
   const entry = {
-    id: epicData.id,
+    id,
     epic: epicData.epic,
     status: null,
   };
@@ -526,7 +538,7 @@ if (isMain) {
   main();
 }
 
-export { score, loadEpics, parseArgs, bar, findEpic, searchEpics, setEpicStatus, setEpicField, mutateEpicRef, addEpic, parseReference, readFileReference, extractContext };
+export { score, loadEpics, parseArgs, bar, findEpic, searchEpics, setEpicStatus, setEpicField, mutateEpicRef, addEpic, toKebabId, parseReference, readFileReference, extractContext };
 
 // Legacy export alias — extractContext kept for backwards compat
 function extractContext(location, lineNum) {
