@@ -5,7 +5,9 @@ description: Use when the user wants to capture a new idea, feature, or bug OR u
 
 # Managing Epics
 
-Covers two operations: **adding** new epics and **editing** existing ones. Both write to `EPICS.json` via the `superpowers-backlog` script.
+Covers two operations: **adding** new epics and **editing** existing ones.
+
+**NEVER read or modify `EPICS.json` directly.** The file is an internal implementation detail of the script and its format may change at any time. Always use the commands below. When the script modifies `EPICS.json`, commit the changes as part of your work.
 
 ## Locating the script
 
@@ -19,7 +21,7 @@ All commands below use `$EPICS_SCRIPT` as a placeholder — substitute the resol
 
 ## Adding a new epic
 
-Evaluate the item and append a rated entry to `EPICS.json`. Process **one item at a time**.
+Evaluate the item and add it via the script. Process **one item at a time**.
 
 ### Process
 
@@ -115,4 +117,4 @@ node $EPICS_SCRIPT --edit <id-or-search> --remove-ref "src/old/path.ts:1-20"
 | Rating `complexity` based on time estimate | Rate technical difficulty only — ignore calendar time |
 | Referencing a directory instead of a file | `references` entries must be file paths or URLs |
 | Long, wordy `id` | Keep it short — it's typed on the command line |
-| Omitting `"status": null` when adding | Required field — omitting it breaks the status filter |
+| Reading or editing `EPICS.json` directly | Always use the script — the file format is an implementation detail |

@@ -29,6 +29,8 @@ For steps 1–2, **REQUIRED SUB-SKILL:** Use `superpowers-backlog`
 
 ## Critical rules
 
+**NEVER read or modify `EPICS.json` directly** — it is an internal implementation detail. Always use the script via the `superpowers-backlog` or `superpowers-backlog-manage` skills. When the script modifies `EPICS.json`, commit the changes as part of your work.
+
 **`--with-context` is mandatory when picking** — pass its output directly to brainstorming and writing-plans as the epic spec.
 
 **`epics.mjs --complete <id>` belongs in the plan, not after it** — add it as the final step of the plan document so the implementer subagent runs it automatically.

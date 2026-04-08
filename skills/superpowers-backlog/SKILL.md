@@ -5,7 +5,9 @@ description: Use when the user wants to see the backlog, asks what to work on ne
 
 # superpowers-backlog Commands
 
-The script `epics.mjs` lives **in the same directory as this SKILL.md file**. It runs in any project directory — no installation needed. It reads and writes `EPICS.json` in the current working directory (`process.cwd()`).
+The script `epics.mjs` lives **in the same directory as this SKILL.md file**. It runs in any project directory — no installation needed. It manages epic data in the current working directory (`process.cwd()`).
+
+**NEVER read or modify `EPICS.json` directly.** The file is an internal implementation detail of the script and its format may change at any time. Always use the commands below. When the script modifies `EPICS.json`, commit the changes as part of your work.
 
 ## Locating the script
 
@@ -61,15 +63,11 @@ This output is the primary spec input for brainstorming and planning.
 
 ## First-time project setup
 
-**1. Create `EPICS.json`** in the project root:
-```json
-[]
-```
-If the file doesn't exist, all read commands return an empty list.
+If the project has no epics yet, the script creates the backing store automatically on first `--add`. No manual setup is required.
 
-**2. Add to `CLAUDE.md`:**
+Optionally add to `CLAUDE.md`:
 ```
-Never read `EPICS.json` directly. All epic state is managed through the superpowers-backlog skill.
+Never read or modify EPICS.json directly. All epic state is managed through the superpowers-backlog skill.
 ```
 
 ## Epic fields
